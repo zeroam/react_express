@@ -1,12 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-const myElement = (
-  <div foo="bar">
-    <button>Test</button>
-    <span>Hello</span>
-  </div>
-)
+
+function MyComponent(props) {
+  return (
+    <div style={{padding: '30px', backgroundColor: 'lightblue'}}>
+      <button>{props.text}</button>
+    </div>
+  )
+}
 
 function App() {
   const style = {
@@ -14,9 +16,13 @@ function App() {
     textAlign: 'center',
   }
 
-  console.log(JSON.parse(JSON.stringify(myElement)))
-
-  return <div style={style}>Welcome to React!</div>
+  return (
+    <>
+      <div style={style}>Welcome to React!</div>
+      <MyComponent text="button1" />
+      <MyComponent text="button2" />
+    </>
+  )
 }
 
 ReactDOM.render(<App />, document.querySelector("#app"))
