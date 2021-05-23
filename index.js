@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import styled from 'styled-components'
 
 function randomColor() {
   const color = `#${Math.random().toString(16).substr(-6)}`;
@@ -7,20 +8,16 @@ function randomColor() {
   return color;
 }
 
-function Card({ color, children }) {
-  return (
-    <div
-      style={{
-        padding: "20px",
-        textAlign: "center",
-        color: "white",
-        backgroundColor: color,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+const Card = styled.div`
+  padding: 20px;
+  text-align: center;
+  color: white;
+  background-color: ${props => props.color};
+`
+
+const Container = styled.div`
+  padding: 20px;
+`
 
 function App() {
   const [color, setColor] = useState("skyblue");
@@ -33,15 +30,15 @@ function App() {
   return (
     <>
       <div style={style}>Welcome to React!</div>
-      <div style={{ padding: "20px" }}>
+      <Container>
         <Card color={color}>
           <input
-            type={"button"}
-            value={"Randomize Color"}
+            type={'button'}
+            value={'Randomize Color'}
             onClick={() => setColor(randomColor())}
           />
         </Card>
-      </div>
+      </Container>
     </>
   );
 }
