@@ -1,60 +1,40 @@
-import React, { useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const types = {
-  PET: "PET",
-  COLOR: "COLOR",
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case types.PET:
-      return { ...state, pet: action.value };
-    case types.COLOR:
-      return { ...state, color: action.value };
-  }
-};
-
-const initialState = {
-  color: 'black',
-  pet: 'cat',
+function randomColor() {
+  return `#${Math.random().toString(16).substr(-6)}`;
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [count, setCount] = useState(0);
+  const color = count % 5 === 0 ? randomColor() : "blue";
+
+  useEffect(() => {
+    document.body.style.backgroundColor = color;
+  }, [color]);
+
+  // undefined dependencies
+  // useEffect(() => {
+  //   document.body.style.backgroundColor = randomColor()
+  // })
+
+  // Empty dependencies -> only once
+  // useEffect(() => {
+  //   document.body.style.backgroundColor = randomColor()
+  // }, [])
 
   return (
     <>
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
-      <div>
-        <label>Choose a color and a pet: </label>
-        <br />
-        <select
-          value={state.color}
-          onChange={event=> {
-            dispatch({ type: types.COLOR, value: event.target.value})
-          }}
-        >
-          <option value="black">Black</option>
-          <option value="pink">Pink</option>
-          <option value="blue">Blue</option>
-        </select>
-        <select
-          value={state.pet}
-          onChange={event => {
-            dispatch({ type: types.PET, value: event.target.value})
-          }}
-        >
-          <option value="cat">Cat</option>
-          <option value="dog">Dog</option>
-          <option value="mouse">Mouse</option>
-        </select>
-        <br />
-        <br />
-        You choose a {state.color} {state.pet}
-      </div>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        Click HERE to increment: {count}
+      </button>
     </>
   );
 }
