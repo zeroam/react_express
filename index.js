@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { memo, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 
-function randomColor() {
-  return `#${Math.random().toString(16).substr(-6)}`;
-}
+const Heading = memo(({ style, title }) => {
+  console.log("Rendered:", title);
+
+  return <h1 style={style}>{title}</h1>;
+});
 
 function App() {
   const [count, setCount] = useState(0);
-  const color = count % 5 === 0 ? randomColor() : "blue";
 
-  useEffect(() => {
-    document.body.style.backgroundColor = color;
-  }, [color]);
+  const normalStyle = {
+    backgroundColor: "teal",
+    color: "white",
+  };
 
-  // undefined dependencies
-  // useEffect(() => {
-  //   document.body.style.backgroundColor = randomColor()
-  // })
-
-  // Empty dependencies -> only once
-  // useEffect(() => {
-  //   document.body.style.backgroundColor = randomColor()
-  // }, [])
+  const memoizedStyle = useMemo(() => {
+    return {
+      backgroundColor: "red",
+      color: "white",
+    };
+  }, []);
 
   return (
     <>
@@ -33,8 +32,10 @@ function App() {
           setCount(count + 1);
         }}
       >
-        Click HERE to increment: {count}
+        Increment
       </button>
+      <Heading style={memoizedStyle} title="Memoized" />
+      <Heading style={normalStyle} title="Normal" />
     </>
   );
 }
