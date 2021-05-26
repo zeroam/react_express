@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
+const randomDiceRoll = () => {
+  return Math.floor(Math.random() * 6) + 1;
+};
+
 function App() {
-  const data = [
-    { id: "a", name: "Devin" },
-    { id: "b", name: "Gabe" },
-    { id: "c", name: "Kim" },
-  ];
+  const [diceRolls, setDiceRolls] = useState([1, 2, 3]);
 
   return (
     <>
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
-      {data.map(item => {
-        return <div key={item.id}>{item.name}</div>
-      })}
-      {data.map((item, index) => {
-        return <div key={index}>{item.name}</div>
-      })}
+      <button
+        onClick={() => {
+          setDiceRolls([...diceRolls, randomDiceRoll()]);
+        }}
+      >
+        Roll dice
+      </button>
+      <ul>
+        {diceRolls.map((diceRoll, index) => {
+          return <li key={index}>{diceRoll}</li>
+        })}
+      </ul>
     </>
   );
 }
