@@ -1,41 +1,79 @@
-import React, { useContext, createContext } from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const ThemeConext = createContext();
+// Passing objects
+function TabsObj({ tabs }) {
+  const [selectedId, setSelectedId] = useState(tabs[0].id);
 
-function Title() {
-  const theme = useContext(ThemeConext);
-
-  const style = {
-    background: theme.primary,
-    color: theme.text,
-  }
-
-  return <h1 style={style}>Title</h1>
+  return (
+    <div>
+      {tabs.map(({ id, title }) => {
+        return (
+          <button
+            key={id}
+            onClick={() => {
+              setSelectedId(id);
+            }}
+            style={{
+              border: "none",
+              background: id === selectedId ? "dodgerblue" : "transparent",
+            }}
+          >
+            {title}
+          </button>
+        );
+      })}
+      <hr />
+      <div>{tabs.find((tab) => tab.id == selectedId).content}</div>
+    </div>
+  );
 }
 
-function Nested() {
-  return <Title />
-}
+// Render props
+function TabsProps({ tabIds, renderTitle, renderContent }) {
+  const [selectedId, setSelectedId] = useState(tabIds[0]);
 
-function NestedTwice() {
-  return <Nested />
+  return (
+    <div>
+      {tabIds.map((id) => {
+        return <button
+          key={id}
+          onClick={() => {
+            setSelectedId(id);
+          }}
+          style={{
+            border: "none",
+            background: id === selectedId ? "dodgerblue" : "transparent",
+          }}
+        >
+          {renderTitle(id)}
+        </button>;
+      })}
+      <hr />
+      <div>{renderContent(selectedId)}</div>
+    </div>
+  );
 }
 
 function App() {
-  const theme = {
-    primary: 'dodgerblue',
-    text: 'white',
-  }
-
   return (
     <>
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
-      <ThemeConext.Provider value={theme}>
-        <NestedTwice />
-      </ThemeConext.Provider>
+      <TabsObj
+        tabs={[
+          { id: "a", title: "Tab A", content: "Tab content A" },
+          { id: "b", title: "Tab B", content: "Tab content B" },
+          { id: "c", title: "Tab C", content: "Tab content C" },
+        ]}
+      />
+      <br />
+      <TabsProps
+        tabIds={["a", "b", "c"]}
+        renderTitle={(id) => `Tab ${id.toUpperCase()}`}
+        renderContent={(id) => `Tab content ${id.toUpperCase()}`}
+      />
     </>
   );
 }

@@ -6,3 +6,4 @@
 - 2. [JSX](https://www.react.express/jsx)
 - 3. [React](https://www.react.express/react)
 - 4. [Hooks](https://www.react.express/hooks)
+- 5. [Patterns](https://www.react.express/patterns)
