@@ -1,37 +1,45 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const Logger = memo((props) => {
-  props.log();
-  return null;
-});
-
 function App() {
+  const intervalRef = useRef();
   const [count, setCount] = useState(0);
-  const count5 = Math.floor(count / 5)
 
-  const memoizedFunction = useCallback(() => {
-    console.log("useCallback");
-  }, [count5])
+  const canvasRef = useRef();
 
-  const normalFunction = () => {
-    console.log("normal");
-  }
+  console.log("rendering");
+
+  useEffect(() => {
+    /* mutable value example */
+    intervalRef.current = setInterval(() => setCount(count => count + 1), 1000);
+    // variable = setInterval(() => setCount(count => count + 1), 1000);
+
+    /* DOM example */
+    const canvas = canvasRef.current
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = 'rgba(59, 108, 212, 0.5)'
+    context.fillRect(10, 10, 50, 50)
+
+    context.fillStyle = 'rgba(59, 108, 212)'
+    context.fillRect(30, 30, 50, 50)
+  }, []);
 
   return (
     <>
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
+      <div style={{ fontSize: 120 }}>{count}</div>
       <button
         onClick={() => {
-          setCount(count + 1);
+          clearInterval(intervalRef.current)
+          // clearInterval(variable)
         }}
       >
-        Increment
+        Stop
       </button>
-      <Logger log={memoizedFunction} />
-      <Logger log={normalFunction} />
+      <canvas ref={canvasRef} />
     </>
   );
 }
