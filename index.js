@@ -1,79 +1,72 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-// Passing objects
-function TabsObj({ tabs }) {
-  const [selectedId, setSelectedId] = useState(tabs[0].id);
+// Uncontrolled components
+function UTextInput({ onSubmit }) {
+  const [value, setValue] = useState("");
 
   return (
-    <div>
-      {tabs.map(({ id, title }) => {
-        return (
-          <button
-            key={id}
-            onClick={() => {
-              setSelectedId(id);
-            }}
-            style={{
-              border: "none",
-              background: id === selectedId ? "dodgerblue" : "transparent",
-            }}
-          >
-            {title}
-          </button>
-        );
-      })}
-      <hr />
-      <div>{tabs.find((tab) => tab.id == selectedId).content}</div>
-    </div>
+    <form
+      onSubmit={(event) => {
+        onSubmit(value);
+        setValue("");
+        event.preventDefault();
+      }}
+    >
+      <input
+        name="input"
+        type="text"
+        value={value}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+      />
+    </form>
   );
 }
 
-// Render props
-function TabsProps({ tabIds, renderTitle, renderContent }) {
-  const [selectedId, setSelectedId] = useState(tabIds[0]);
-
+// Controlled components
+function CTextInput({ value, setValue, onSubmit }) {
   return (
-    <div>
-      {tabIds.map((id) => {
-        return <button
-          key={id}
-          onClick={() => {
-            setSelectedId(id);
-          }}
-          style={{
-            border: "none",
-            background: id === selectedId ? "dodgerblue" : "transparent",
-          }}
-        >
-          {renderTitle(id)}
-        </button>;
-      })}
-      <hr />
-      <div>{renderContent(selectedId)}</div>
-    </div>
-  );
+    <form
+      onSubmit={(event) => {
+        onSubmit()
+        setValue('')
+        event.preventDefault()
+      }}
+    >
+      <input
+        name="input"
+        type="text"
+        value={value}
+        onChange={(event) => {
+          setValue(event.target.value)
+        }}
+      />
+    </form>
+  )
 }
 
 function App() {
+  const [value, setValue] = useState("");
+  const [submitted, setSubmitted] = useState("");
+
   return (
     <>
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
-      <TabsObj
-        tabs={[
-          { id: "a", title: "Tab A", content: "Tab content A" },
-          { id: "b", title: "Tab B", content: "Tab content B" },
-          { id: "c", title: "Tab C", content: "Tab content C" },
-        ]}
-      />
-      <br />
-      <TabsProps
-        tabIds={["a", "b", "c"]}
-        renderTitle={(id) => `Tab ${id.toUpperCase()}`}
-        renderContent={(id) => `Tab content ${id.toUpperCase()}`}
-      />
+      <div>
+        <UTextInput onSubmit={setSubmitted} />
+        You submitted: {submitted}
+      </div>
+      <div>
+        <CTextInput
+          value={value}
+          setValue={setValue}
+          onSubmit={() => setSubmitted(value)} />
+        You submitted: {submitted}
+      </div>
     </>
   );
 }
