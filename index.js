@@ -1,50 +1,19 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import ReactDOM from "react-dom";
 
-// Uncontrolled components
-function UTextInput({ onSubmit }) {
-  const [value, setValue] = useState("");
-
+function List({ children }) {
   return (
-    <form
-      onSubmit={(event) => {
-        onSubmit(value);
-        setValue("");
-        event.preventDefault();
-      }}
-    >
-      <input
-        name="input"
-        type="text"
-        value={value}
-        onChange={(event) => {
-          setValue(event.target.value);
-        }}
-      />
-    </form>
+    <>
+      {Children.toArray(children).map((child, index, array) => {
+        return (
+          <>
+            {child}
+            {index < array.length - 1 && <hr key={`hr-${index}`} />}
+          </>
+        );
+      })}
+    </>
   );
-}
-
-// Controlled components
-function CTextInput({ value, setValue, onSubmit }) {
-  return (
-    <form
-      onSubmit={(event) => {
-        onSubmit()
-        setValue('')
-        event.preventDefault()
-      }}
-    >
-      <input
-        name="input"
-        type="text"
-        value={value}
-        onChange={(event) => {
-          setValue(event.target.value)
-        }}
-      />
-    </form>
-  )
 }
 
 function App() {
@@ -56,17 +25,11 @@ function App() {
       <div style={{ padding: "40px", textAlign: "center" }}>
         Welcome to React!
       </div>
-      <div>
-        <UTextInput onSubmit={setSubmitted} />
-        You submitted: {submitted}
-      </div>
-      <div>
-        <CTextInput
-          value={value}
-          setValue={setValue}
-          onSubmit={() => setSubmitted(value)} />
-        You submitted: {submitted}
-      </div>
+      <List>
+        <span>A</span>
+        <span>B</span>
+        <span>C</span>
+      </List>
     </>
   );
 }
